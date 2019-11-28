@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+<link rel="stylesheet" href="/webjars/bootstrap/4.4.0/dist/css/bootstrap.css">
+<link rel="stylesheet" href="/webjars/diff2html/2.11.2/dist/diff2html.min.css">
+
+<head>
+    <title>Code Comparator</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+
+<body class="container-fluid">
+
+<div class="form-group row p-2">
+    <div class="col-sm-6">
+        <div class="form-group  mb-2">
+            <textarea class="form-control" rows="4" id="leftTxt" placeholder="Left Text"></textarea>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group  mb-2">
+            <textarea class="form-control" rows="4" id="rightTxt" placeholder="Right Text"></textarea>
+        </div>
+    </div>
+    <div class="col-sm-1">
+        <button type="button" class="btn btn-primary mb-2" id="withSVNVersion">Compare</button>
+    </div>
+</div>
+
+<div id="loading"></div>
+
+<br/>
+
+<div id="diffPanel"></div>
+
+<div id="diffText"></div>
+
+<script src="/webjars/jquery/3.4.1/dist/jquery.min.js"></script>
+<script src="/webjars/popper.js/1.16.0/dist/umd/popper.min.js"></script>
+<script src="/webjars/bootstrap/4.4.0/dist/js/bootstrap.min.js"></script>
+<script src="/webjars/diff2html/2.11.2/dist/diff2html.min.js"></script>
+<script src="/webjars/diff2html/2.11.2/dist/diff2html-ui.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        function loadDiff(leftTxt, rightTxt) {
+
+            $("#loading").text("Loading ... ");
+
+            $.ajax({
+                url: "/diff",
+                method: 'POST',
+                contentType: "application/json",
+                data: JSON.stringify({left: leftTxt, right: rightTxt}),
+                success: function (result) {
+                    if (result) {
+                        renderDiff(result);
+
+                        $("#loading").text("");
+
+                        //$("#diffText").text(result);
+
+                    } else {
+
+                        $("#diffPanel").text("");
+
+                        $("#loading").text("SAME CONTENT!!");
+
+                        //$("#diffText").text("");
+
+                    }
+                }
+            });
+        }
+
+        function renderDiff(diffStr) {
+            var diff2htmlUi = new Diff2HtmlUI({diff: diffStr});
+
+            diff2htmlUi.draw('#diffPanel', {
+                inputFormat: 'diff',
+                outputFormat: 'side-by-side',
+                showFiles: false,
+                matching: 'lines',
+                synchronisedScroll: true
+            });
+        }
+
+
+        $("#withSVNVersion").click(function (evt) {
+            loadDiff($("#leftTxt").val(), $("#rightTxt").val());
+        });
+
+    });
+
+
+</script>
+
+
+</body>
+</html>
