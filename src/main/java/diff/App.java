@@ -16,9 +16,9 @@ import static java.util.stream.Collectors.toList;
 import static org.springframework.http.ResponseEntity.ok;
 
 @SpringBootApplication
-public class ManualReviewApp {
+public class App {
     public static void main(String[] args) {
-        SpringApplication.run(ManualReviewApp.class, args);
+        SpringApplication.run(App.class, args);
     }
 }
 
