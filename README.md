@@ -13,3 +13,8 @@ Built with Spring Boot, java-diff-utils and diff2html libraries
 
 - At runtime  `java -jar target/diff-v1.jar --server.port=8084`
 - In code: update `server.port` property on application.properties
+
+
+### Screenshot 
+
+![](screenshot.png)
